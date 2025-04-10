@@ -25,6 +25,8 @@ void init_scene(Scene* scene)
     scene->material.specular.blue = 0.0;
 
     scene->material.shininess = 0.0;
+
+    scene->rotation_angle = 0.0f;
 }
 
 void set_lighting()
@@ -69,6 +71,11 @@ void set_material(const Material* material)
 
 void update_scene(Scene* scene)
 {
+    scene->rotation_angle += 0.1f;
+    if (scene->rotation_angle >= 360.0f)
+        scene->rotation_angle -= 360.0f;
+
+    printf("Rotation Angle: %.2f\n", scene->rotation_angle);
 }
 
 void render_scene(const Scene* scene)
@@ -76,7 +83,12 @@ void render_scene(const Scene* scene)
     set_material(&(scene->material));
     set_lighting();
     draw_origin();
+    glPushMatrix(); // Save current transformation state
+
+    glRotatef(scene->rotation_angle, 0.0f, 1.0f, 0.0f); // Rotate around Y-axis
     draw_model(&(scene->cube));
+
+    glPopMatrix(); 
 }
 
 void draw_origin()
