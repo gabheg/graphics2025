@@ -83,16 +83,24 @@ void render_scene(const Scene* scene)
     set_material(&(scene->material));
     set_lighting();
     draw_origin();
-    glPushMatrix(); // Save current transformation state
-    glRotatef(scene->rotation_angle, 0.0f, 1.0f, 0.0f); // Rotate around Y-axis
-    draw_model(&(scene->cube));
-    glPopMatrix();
-    
-    glPushMatrix();
-    glTranslatef(2.0f, 0.0f, 0.0f); // Move the cat model to the side
-    glBindTexture(GL_TEXTURE_2D, scene->cat_texture_id);
-    draw_model(&(scene->cat));
-    glPopMatrix();
+    for (int row = 0; row < 4; ++row) {
+        for (int col = 0; col < 4; ++col) {
+
+            glPushMatrix();
+
+            // Pozíció eltolása rács szerint
+            glTranslatef(col * 2.0f, 0.0f, row * 2.0f);  // minden objektum 2 egységre egymástól
+
+            // Forgatás minden modellre
+            glRotatef(scene->rotation_angle, 0.0f, 1.0f, 0.0f);
+
+            // Textúra és modell
+            glBindTexture(GL_TEXTURE_2D, scene->texture_id);
+            draw_model(&(scene->cube));  // vagy scene->cat
+
+            glPopMatrix();
+        }
+    }
 }
 
 void draw_origin()
