@@ -56,4 +56,6 @@ void render_app(App* app);
  */
 void destroy_app(App* app);
 
+void handle_scene_input(Scene* scene, SDL_Event event);
+
 #endif /* APP_H */

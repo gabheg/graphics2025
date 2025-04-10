@@ -14,6 +14,8 @@ typedef struct Scene
     GLuint texture_id;
     GLuint cat_texture_id;
     float rotation_angle; 
+    float cat_x;
+    float cat_z;
 } Scene;
 
 /**

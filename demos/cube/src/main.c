@@ -17,5 +17,7 @@ int main(int argc, char* argv[])
     }
     destroy_app(&app);
 
+    
+
     return 0;
 }

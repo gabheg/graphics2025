@@ -27,6 +27,9 @@ void init_scene(Scene* scene)
     scene->material.shininess = 0.0;
 
     scene->rotation_angle = 0.0f;
+
+    scene->cat_x = 0.0f;
+    scene->cat_z = 0.0f;
 }
 
 void set_lighting()
@@ -85,22 +88,20 @@ void render_scene(const Scene* scene)
     draw_origin();
     for (int row = 0; row < 4; ++row) {
         for (int col = 0; col < 4; ++col) {
-
             glPushMatrix();
-
-            // Pozíció eltolása rács szerint
-            glTranslatef(col * 2.0f, 0.0f, row * 2.0f);  // minden objektum 2 egységre egymástól
-
-            // Forgatás minden modellre
+            glTranslatef(col * 2.0f, 0.0f, row * 2.0f);
             glRotatef(scene->rotation_angle, 0.0f, 1.0f, 0.0f);
-
-            // Textúra és modell
             glBindTexture(GL_TEXTURE_2D, scene->texture_id);
-            draw_model(&(scene->cube));  // vagy scene->cat
-
+            draw_model(&(scene->cube));
             glPopMatrix();
         }
     }
+
+    glPushMatrix();
+    glTranslatef(scene->cat_x, 0.0f, scene->cat_z);
+    glBindTexture(GL_TEXTURE_2D, scene->cat_texture_id);
+    draw_model(&(scene->cat));
+    glPopMatrix();
 }
 
 void draw_origin()

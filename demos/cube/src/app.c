@@ -105,66 +105,84 @@ void handle_app_events(App* app)
     static int mouse_y = 0;
     int x;
     int y;
+    const float move_speed = 0.1f;  // A mozgás sebessége, ami növelhető vagy csökkenthető
 
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
         case SDL_KEYDOWN:
-            switch (event.key.keysym.scancode) {
-            case SDL_SCANCODE_ESCAPE:
-                app->is_running = false;
-                break;
-            case SDL_SCANCODE_W:
-                set_camera_speed(&(app->camera), 1);
-                break;
-            case SDL_SCANCODE_S:
-                set_camera_speed(&(app->camera), -1);
-                break;
-            case SDL_SCANCODE_A:
-                set_camera_side_speed(&(app->camera), 1);
-                break;
-            case SDL_SCANCODE_D:
-                set_camera_side_speed(&(app->camera), -1);
-                break;
-            default:
-                break;
-            }
-            break;
         case SDL_KEYUP:
-            switch (event.key.keysym.scancode) {
-            case SDL_SCANCODE_W:
-            case SDL_SCANCODE_S:
-                set_camera_speed(&(app->camera), 0);
-                break;
-            case SDL_SCANCODE_A:
-            case SDL_SCANCODE_D:
-                set_camera_side_speed(&(app->camera), 0);
-                break;
-            default:
-                break;
+            handle_scene_input(&app->scene, event);  // Az app->scene-t kell használni
+            if (event.type == SDL_KEYDOWN) {
+                switch (event.key.keysym.scancode) {
+                    case SDL_SCANCODE_ESCAPE:
+                        app->is_running = false;
+                        break;
+                    case SDL_SCANCODE_W:
+                        set_camera_speed(&(app->camera), 1);
+                        break;
+                    case SDL_SCANCODE_S:
+                        set_camera_speed(&(app->camera), -1);
+                        break;
+                    case SDL_SCANCODE_A:
+                        set_camera_side_speed(&(app->camera), 1);
+                        break;
+                    case SDL_SCANCODE_D:
+                        set_camera_side_speed(&(app->camera), -1);
+                        break;
+                    case SDL_SCANCODE_UP:
+                        app->scene.cat_z -= move_speed;  // Használj app->scene-t
+                        break;
+                    case SDL_SCANCODE_DOWN:
+                        app->scene.cat_z += move_speed;  // Használj app->scene-t
+                        break;
+                    default:
+                        break;
+                }
+            } else if (event.type == SDL_KEYUP) {
+                switch (event.key.keysym.scancode) {
+                    case SDL_SCANCODE_W:
+                    case SDL_SCANCODE_S:
+                        set_camera_speed(&(app->camera), 0);
+                        break;
+                    case SDL_SCANCODE_A:
+                    case SDL_SCANCODE_D:
+                        set_camera_side_speed(&(app->camera), 0);
+                        break;
+                    default:
+                        break;
+                }
             }
             break;
-        case SDL_MOUSEBUTTONDOWN:
-            is_mouse_down = true;
-            break;
-        case SDL_MOUSEMOTION:
-            SDL_GetMouseState(&x, &y);
-            if (is_mouse_down) {
-                rotate_camera(&(app->camera), mouse_x - x, mouse_y - y);
-            }
-            mouse_x = x;
-            mouse_y = y;
-            break;
-        case SDL_MOUSEBUTTONUP:
-            is_mouse_down = false;
-            break;
-        case SDL_QUIT:
-            app->is_running = false;
-            break;
-        default:
-            break;
+
+        // További események...
         }
     }
 }
+
+void handle_scene_input(Scene* scene, SDL_Event event)
+{
+    const float move_speed = 0.2f;
+
+    if (event.type == SDL_KEYDOWN) {
+        switch (event.key.keysym.sym) {
+            case SDLK_t:
+                scene->cat_z -= move_speed;
+                break;
+            case SDLK_g:
+                scene->cat_z += move_speed;
+                break;
+            case SDLK_f:
+                scene->cat_x -= move_speed;
+                break;
+            case SDLK_h:
+                scene->cat_x += move_speed;
+                break;
+        }
+    }
+}
+
+
+
 
 void update_app(App* app)
 {
