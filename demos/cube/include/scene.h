@@ -9,8 +9,10 @@
 typedef struct Scene
 {
     Model cube;
+    Model cat;
     Material material;
     GLuint texture_id;
+    GLuint cat_texture_id;
     float rotation_angle; 
 } Scene;
 

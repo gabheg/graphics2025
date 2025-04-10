@@ -5,10 +5,10 @@
 
 void init_scene(Scene* scene)
 {
-    // load_model(&(scene->cube), "assets/models/cube.obj");
-    // scene->texture_id = load_texture("assets/textures/cube.png");
-    load_model(&(scene->cube), "assets/models/cat.obj");
+    load_model(&(scene->cube), "assets/models/cube.obj");
     scene->texture_id = load_texture("assets/textures/cube.png");
+    load_model(&(scene->cat), "assets/models/cat.obj");
+    //scene->texture_id = load_texture("assets/textures/cube.png");
 
     glBindTexture(GL_TEXTURE_2D, scene->texture_id);
 
@@ -84,11 +84,15 @@ void render_scene(const Scene* scene)
     set_lighting();
     draw_origin();
     glPushMatrix(); // Save current transformation state
-
     glRotatef(scene->rotation_angle, 0.0f, 1.0f, 0.0f); // Rotate around Y-axis
     draw_model(&(scene->cube));
-
-    glPopMatrix(); 
+    glPopMatrix();
+    
+    glPushMatrix();
+    glTranslatef(2.0f, 0.0f, 0.0f); // Move the cat model to the side
+    glBindTexture(GL_TEXTURE_2D, scene->cat_texture_id);
+    draw_model(&(scene->cat));
+    glPopMatrix();
 }
 
 void draw_origin()
